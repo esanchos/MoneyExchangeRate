@@ -1,0 +1,7 @@
+http://stackoverflow.com/questions/3139879/how-do-i-get-currency-exchange-rates-via-an-api-such-as-google-finance
+
+https://currencylayer.com/documentation
+https://firebase.google.com/docs/admob/android/games
+https://restcountries.eu/
+http://www.geognos.com/geo/en/world-countries-API.html
+http://fixer.io/

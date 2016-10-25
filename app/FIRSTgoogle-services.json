@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "312594735723",
+    "firebase_url": "https://best-currency-exchange.firebaseio.com",
+    "project_id": "best-currency-exchange",
+    "storage_bucket": "best-currency-exchange.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312594735723:android:2681da763013b4c9",
+        "android_client_info": {
+          "package_name": "com.earaujo.app.moneyexchangerate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "312594735723-k4356omi8kt31uvatjtdbsqups9i8ual.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.earaujo.app.moneyexchangerate",
+            "certificate_hash": "C894D85B8A388615F0531C3A077FD57AE60019AA"
+          }
+        },
+        {
+          "client_id": "312594735723-vs7mokte7np8q3lgsquikso3au90lc43.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9hbJLaoqaeQLjMU9HpnOhk9ILf_8HjJY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "312594735723-vs7mokte7np8q3lgsquikso3au90lc43.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
