@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,11 +61,11 @@ public class SpinnerAdapter extends BaseAdapter {
         final CountryItem ci = items.get(position);
 
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.custom, null);
+            convertView = mInflater.inflate(R.layout.spinner_main, null);
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.tvLanguage);
             holder.image = (ImageView) convertView.findViewById(R.id.imgLanguage);
-            holder.btn = (CheckBox) convertView.findViewById(R.id.button);
+            holder.btn = (ImageView) convertView.findViewById(R.id.button);
 
             convertView.setTag(holder);
         } else {
@@ -92,7 +91,7 @@ public class SpinnerAdapter extends BaseAdapter {
     static class ViewHolder {
         ImageView image;
         TextView name;
-        CheckBox btn;
+        ImageView btn;
     }
 
     public interface Listener {

@@ -1,6 +1,7 @@
 package com.earaujo.app.moneyexchangerate;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,7 +23,8 @@ import java.util.List;
 public class DownloadData {
 
     private static final String URL_COUNTRIES = "http://apilayer.net/api/list?access_key=1e98533581cd6827c561b1d6d7883b93&prettyprint=1";
-    private static final String URL_CURRENCIES = "http://apilayer.net/api/live?access_key=1e98533581cd6827c561b1d6d7883b93&format=1";
+    //private static final String URL_CURRENCIES = "http://apilayer.net/api/live?access_key=1e98533581cd6827c561b1d6d7883b93&format=1";
+    private static final String URL_CURRENCIES = "http://eduardoaraujo.dynu.com/app/currency/currency.php";
 
     private static long timeStamp=0;
 
@@ -350,6 +352,8 @@ public class DownloadData {
     }
 
     public static void getCurrencies(final Listener l, final Context c) {
+        Log.d("NUNES",initialRates);
+
         JsonObjectRequest requisicao =
                 new JsonObjectRequest(
                         Request.Method.GET,
