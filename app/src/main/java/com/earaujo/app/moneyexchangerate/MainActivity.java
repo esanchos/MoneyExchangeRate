@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -96,6 +98,16 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
 
         etBox1.addTextChangedListener(textWatcherb1());
         etBox2.addTextChangedListener(textWatcherb2());
+
+        getFirebaseToken();
+    }
+
+    private void getFirebaseToken() {
+        String token = FirebaseInstanceId.getInstance().getToken();
+
+        // Log and toast
+        String msg = getString(R.string.msg_token_fmt, token);
+        Log.d(TAG, msg);
     }
 
     private String getDate(long timeStamp){
@@ -328,7 +340,7 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
         int spn1pos=0;
         int spn2pos=0;
 
-        List<CountryItem> listCountries = new ArrayList<CountryItem>();
+        List<CountryItem> listCountries = new ArrayList<>();
 
         listCountries.addAll(currencyData.getCountryDataList());
 
@@ -357,7 +369,7 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
 
     public void onManageCurrenciesClick(View view) {
 
-        if (loadSpinners==false)
+        if (!loadSpinners)
             return;
         loadSpinners=false;
 

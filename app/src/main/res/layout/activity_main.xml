@@ -124,4 +124,7 @@
         android:onClick="deleteFlags"
         android:visibility="gone"/>
 
+    <include layout="@layout/keyboard"
+        android:visibility="gone"/>
+
 </LinearLayout>
