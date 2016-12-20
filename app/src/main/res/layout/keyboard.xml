@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true"
+    android:layout_gravity="bottom">
 
         <TableRow
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="wrap_content" >
 
             <TextView
                 android:text="@string/keypad7"
@@ -95,7 +96,7 @@
                 android:textSize="@dimen/keyboard_text_size" />
 
         <TextView
-            android:text="@string/keypadAdd"
+            android:text=""
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -143,13 +144,15 @@
             android:paddingTop="10dp"
             android:textSize="@dimen/keyboard_text_size" />
 
-        <TextView
-            android:text="@string/keypadAdd"
+        <ImageView
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:id="@+id/tvAdd3"
+            android:id="@+id/tvRate"
+            android:alpha=".54"
+            android:src="@drawable/ic_star_black_24dp"
+            android:layout_gravity="center_vertical"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:textSize="@dimen/keyboard_text_size" />
@@ -181,13 +184,17 @@
                 android:paddingTop="10dp"
                 android:textSize="@dimen/keyboard_text_size" />
 
-            <TextView
-            android:text="@string/keypadDel"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tvDel"
+            <ImageView
+                android:text="@string/keypadDel"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_gravity="center_vertical"
+                android:clickable="true"
+                android:id="@+id/tvDel"
+                android:alpha=".54"
+                android:src="@drawable/ic_backspace_black_24dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textSize="@dimen/keyboard_text_size" />
@@ -198,11 +205,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:id="@+id/tvAdd4"
+                android:id="@+id/tvClr"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textSize="@dimen/keyboard_text_size" />
 
         </TableRow>
+
+        <com.google.android.gms.ads.AdView
+            android:layout_marginTop="10dp"
+            android:id="@+id/adView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+        </com.google.android.gms.ads.AdView>
+
     </TableLayout>
-</LinearLayout>
