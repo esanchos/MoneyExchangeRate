@@ -3,6 +3,7 @@ package com.earaujo.app.moneyexchangerate;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,7 +41,9 @@ public class FileOperations {
             in.close();
             for(String cc : currencyCode) {
                 ci.add(new CountryItem(context, "",cc,""));
+                Log.d("FILE READ",cc);
             }
+            Log.d("FILE READ","###########");
             return ci;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -66,8 +69,12 @@ public class FileOperations {
         List<String> currencyCode = new ArrayList<String>();
 
         for (CountryItem ci: toWrite) {
-            currencyCode.add(ci.getCurrencyCode());
+            if (!currencyCode.contains(ci.getCurrencyCode())) {
+                currencyCode.add(ci.getCurrencyCode());
+                Log.d("FILE SAVE",ci.getCurrencyCode());
+            }
         }
+        Log.d("FILE SAVE","###########");
 
         try {
             out = new ObjectOutputStream(new FileOutputStream(directory

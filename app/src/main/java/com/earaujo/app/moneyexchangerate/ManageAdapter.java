@@ -1,6 +1,7 @@
 package com.earaujo.app.moneyexchangerate;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.text.Html.fromHtml;
 
 /**
  * Created by Eduardo on 04/07/2016.
@@ -68,7 +71,7 @@ public class ManageAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(ci.getCountryName());
+        holder.name.setText(fromHtml("<b><font color=black>" + ci.getCurrencyCode() + "</font></b> " +  ci.getCountryName()));
 
         if (ci.getImage() != null) {
             holder.image.setImageBitmap(ci.getImage());
@@ -80,10 +83,10 @@ public class ManageAdapter extends BaseAdapter {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (b) {
-                    exclusionCountryList.remove(ci);
+                    exclusionCountryList = removeItem(exclusionCountryList,ci);
                 }
                 else {
-                    exclusionCountryList.add(ci);
+                    exclusionCountryList = addItem(exclusionCountryList,ci);
                 }
                 FileOperations.writeExcludedList(context, exclusionCountryList);
             }
@@ -97,6 +100,30 @@ public class ManageAdapter extends BaseAdapter {
         }
 
         return convertView;
+    }
+
+    private List<CountryItem> removeItem(List<CountryItem> theList, CountryItem itemToExclude) {
+        List<CountryItem>tempList = new ArrayList<>();
+
+        for (CountryItem ci : theList) {
+            if (!ci.getCurrencyCode().equals(itemToExclude.getCurrencyCode())) {
+                tempList.add(ci);
+            }
+        }
+        return tempList;
+    }
+
+    private List<CountryItem> addItem(List<CountryItem> theList, CountryItem itemToAdd) {
+        List<CountryItem>tempList = theList;
+
+        for (CountryItem ci : theList) {
+            if (ci.getCurrencyCode().equals(itemToAdd.getCurrencyCode())) {
+                return tempList;
+            }
+        }
+        tempList.add(itemToAdd);
+
+        return tempList;
     }
 
     static class ViewHolder {

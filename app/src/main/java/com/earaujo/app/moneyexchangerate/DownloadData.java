@@ -214,7 +214,7 @@ public class DownloadData {
                 new JsonObjectRequest(
                         Request.Method.GET,
                         URL_COUNTRIES,
-                        (String)null,
+                        null,
                         new Response.Listener<JSONObject>() {
 
                             @Override
@@ -358,7 +358,7 @@ public class DownloadData {
                 new JsonObjectRequest(
                         Request.Method.GET,
                         URL_CURRENCIES,
-                        (String)null,
+                        null,
                         new Response.Listener<JSONObject>() {
 
                             @Override
