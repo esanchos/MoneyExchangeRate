@@ -26,7 +26,7 @@ import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 
 public class MainActivity extends Activity implements
-        CurrencyData.Listener, SpinnerAdapter.Listener, View.OnClickListener {
+        CurrencyData.Listener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -67,8 +67,8 @@ public class MainActivity extends Activity implements
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9938026363796976~6776883041");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("8FA911DB41DE8629DF3B72C3716E6087").build();
-        //AdRequest adRequest = new AdRequest.Builder().build();
+        //AdRequest adRequest = new AdRequest.Builder().addTestDevice("8FA911DB41DE8629DF3B72C3716E6087").build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         context = this;
@@ -192,7 +192,6 @@ public class MainActivity extends Activity implements
     private void fillSpinners(List<CountryItem> countryItems) {
 
         spinnerAdapter = new SpinnerAdapter(this, countryItems);
-        spinnerAdapter.setListener(this);
         //sta.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spnCountry1.setAdapter(spinnerAdapter);
@@ -242,12 +241,6 @@ public class MainActivity extends Activity implements
     public void onGetCurrencyCompleted() {
         rate = currencyData.getRate();
         updateUI();
-    }
-
-    public void onItemExcludeClick(CountryItem excludeItem) {
-        currencyData.addExcludedItem(excludeItem);
-
-        refreshSpinners(excludeItem);
     }
 
     public void refreshSpinners(CountryItem excludeItem) {

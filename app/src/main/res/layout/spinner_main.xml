@@ -1,42 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="48dp"
-    android:padding="4dp">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:layout_height="48dp">
 
     <ImageView
         android:id="@+id/imgLanguage"
-        android:layout_width="48dp"
-        android:layout_height="24dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:src="@drawable/no_flag"
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+        android:layout_marginLeft="8dp"
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"
-        android:paddingBottom="1dp"
-        android:paddingLeft="0dp"
-        android:paddingTop="0dp"
-        android:paddingRight="0dp"
-        android:layout_marginLeft="12dp"/>
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/tvLanguage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:text="TheText"
+        android:textStyle="bold"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/imgLanguage"
-        android:layout_toEndOf="@id/imgLanguage"
+        android:layout_toRightOf="@+id/imgLanguage"
+        android:layout_toEndOf="@+id/imgLanguage"
         android:minWidth="250dp"
         android:textAlignment="textStart"
-        android:paddingLeft="8dp" />
-
-    <ImageView
-        android:id="@+id/button"
-        android:layout_width="48dp"
-        android:layout_height="24dp"
-        android:src="@drawable/remove"
-        android:padding="0dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true" />
+        android:gravity="start"
+        android:paddingLeft="5dp" />
 
 </RelativeLayout >

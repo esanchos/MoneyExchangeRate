@@ -11,6 +11,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.text.Html.fromHtml;
+
 /**
  * Created by Eduardo on 02/07/2016.
  */
@@ -18,8 +20,6 @@ public class SpinnerAdapter extends BaseAdapter {
 
     private LayoutInflater mInflater;
     private List<CountryItem>items = new ArrayList<CountryItem>();
-
-    private Listener mListener;
 
     public SpinnerAdapter(Context context, List items) {
         mInflater = LayoutInflater.from(context);
@@ -65,41 +65,24 @@ public class SpinnerAdapter extends BaseAdapter {
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.tvLanguage);
             holder.image = (ImageView) convertView.findViewById(R.id.imgLanguage);
-            holder.btn = (ImageView) convertView.findViewById(R.id.button);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(ci.getCurrencyCode());
+        holder.name.setText(fromHtml("<b><font color=black>" + ci.getCurrencyCode() + "</font></b> " + ci.getCountryName()));
         if (ci.getImage() != null) {
             holder.image.setImageBitmap(ci.getImage());
         } else {
             holder.image.setImageResource(R.drawable.no_flag);
         }
 
-        holder.btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onItemExcludeClick(ci);
-            }
-        });
         return convertView;
     }
 
     static class ViewHolder {
         ImageView image;
         TextView name;
-        ImageView btn;
     }
-
-    public interface Listener {
-        void onItemExcludeClick(CountryItem ci);
-    }
-
-    public void setListener(Listener l) {
-        mListener = l;
-    }
-
 }
