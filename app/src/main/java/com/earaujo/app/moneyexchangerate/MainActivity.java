@@ -173,22 +173,6 @@ public class MainActivity extends Activity implements
         loadSpinners = true;
     }
 
-    private void updateUI() {
-        CountryItem cd;
-
-        if (spinnerAdapter==null)
-            return;
-
-        //timeStamp.setText(getDate(DownloadData.getTimeStamp()));
-
-        //cd = spinnerAdapter.getCountryFromId(spnCountry1.getSelectedItemPosition());
-        //tvFrom.setText("1 " + cd.getCountryName() + " equals");
-        //cd = spinnerAdapter.getCountryFromId(spnCountry2.getSelectedItemPosition());
-        //tvTo.setText(String.format( "%.2f", rate ).replace(",",".") + " " + cd.getCountryName());
-
-        tvBox2.setText(String.format( "%.2f", rate ).replace(",","."));
-    }
-
     private void fillSpinners(List<CountryItem> countryItems) {
 
         spinnerAdapter = new SpinnerAdapter(this, countryItems);
@@ -207,9 +191,8 @@ public class MainActivity extends Activity implements
                 currencyData.setFromCountry(cd.getCurrencyCode());
                 rate = currencyData.getRate();
                 positionSpin1 = cd.getCurrencyCode();
-                //Log.d(TAG,"SPINPOS1: " + positionSpin1);
                 FileOperations.writeSpinPosition(context,positionSpin1,positionSpin2);
-                updateUI();
+                updateValues();
             }
 
             @Override
@@ -226,9 +209,8 @@ public class MainActivity extends Activity implements
                 currencyData.setToCountry(cd.getCurrencyCode());
                 rate = currencyData.getRate();
                 positionSpin2 = cd.getCurrencyCode();
-                //Log.d(TAG,"SPINPOS2: " + positionSpin2);
                 FileOperations.writeSpinPosition(context,positionSpin1,positionSpin2);
-                updateUI();
+                updateValues();
             }
 
             @Override
@@ -240,50 +222,7 @@ public class MainActivity extends Activity implements
 
     public void onGetCurrencyCompleted() {
         rate = currencyData.getRate();
-        updateUI();
-    }
-
-    public void refreshSpinners(CountryItem excludeItem) {
-
-        String countryCode1 = spinnerAdapter.getItem(spnCountry1.getSelectedItemPosition()).getCurrencyCode();
-        String countryCode2 = spinnerAdapter.getItem(spnCountry2.getSelectedItemPosition()).getCurrencyCode();
-
-        spinnerAdapter.removeItem(excludeItem);
-
-        //Adjust the selected items
-        int newPosition1=0;
-        int newPosition2=0;
-        for(int i=0; i<spinnerAdapter.getCount();i++) {
-            if (spinnerAdapter.getCountryFromId(i).getCurrencyCode().equals(countryCode1)) {
-                newPosition1=i;
-            }
-            if (spinnerAdapter.getCountryFromId(i).getCurrencyCode().equals(countryCode2)) {
-                newPosition2=i;
-            }
-        }
-
-        //Log.d(TAG,"EXCL: SPN1: " + Integer.toString(newPosition1) + "SPN2: " + Integer.toString(newPosition2));
-
-        if (newPosition1>=0)
-            spnCountry1.setSelection(newPosition1);
-        if (newPosition2>=0)
-            spnCountry2.setSelection(newPosition2);
-
-        positionSpin1 = spinnerAdapter.getCountryFromId(newPosition1).getCurrencyCode();
-        positionSpin2 = spinnerAdapter.getCountryFromId(newPosition2).getCurrencyCode();
-
-        FileOperations.writeSpinPosition(this,positionSpin1,positionSpin2);
-
-        currencyData.setFromCountry(positionSpin1);
-        currencyData.setToCountry(positionSpin2);
-        rate = currencyData.getRate();
-
-        //Log.d(TAG,"ON EXCL SPIN1: " + positionSpin1);
-        //Log.d(TAG,"ON EXCL SPIN2: " + positionSpin2);
-
-        updateUI();
-
-        spinnerAdapter.notifyDataSetChanged();
+        updateValues();
     }
 
     public void onGetCountriesNames() {
