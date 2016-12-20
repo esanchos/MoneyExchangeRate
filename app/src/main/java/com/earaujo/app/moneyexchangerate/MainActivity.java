@@ -198,7 +198,7 @@ public class MainActivity extends Activity implements
         spnCountry1.setAdapter(spinnerAdapter);
 
         for (CountryItem ci : countryItems) {
-            ci.loadImage(spinnerAdapter);
+            ci.loadImage();
         }
 
         spnCountry1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -346,7 +346,6 @@ public class MainActivity extends Activity implements
                     excluded = true;
                 }
             }
-            items.taskCancel();  //Cancel Flag loading
             ci.add(items.getCountryName(),items.getCurrencyCode(),items.getImgUrl(),excluded);  //fill intent
         }
 
@@ -359,14 +358,6 @@ public class MainActivity extends Activity implements
         super.onResume();
         onGetCountriesNames();
         currencyData.getCurrencies();
-    }
-
-    @Override
-    public void onBackPressed() {
-        for (CountryItem items : spinnerAdapter.getAll()) {
-            items.taskCancel();
-        }
-        super.onBackPressed();
     }
 
     public void deleteFlags(View view) {

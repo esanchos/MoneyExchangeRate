@@ -41,9 +41,9 @@ public class FileOperations {
             in.close();
             for(String cc : currencyCode) {
                 ci.add(new CountryItem(context, "",cc,""));
-                Log.d("FILE READ",cc);
+                //Log.d("FILE READ",cc);
             }
-            Log.d("FILE READ","###########");
+            //Log.d("FILE READ","###########");
             return ci;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -71,10 +71,10 @@ public class FileOperations {
         for (CountryItem ci: toWrite) {
             if (!currencyCode.contains(ci.getCurrencyCode())) {
                 currencyCode.add(ci.getCurrencyCode());
-                Log.d("FILE SAVE",ci.getCurrencyCode());
+                //Log.d("FILE SAVE",ci.getCurrencyCode());
             }
         }
-        Log.d("FILE SAVE","###########");
+        //Log.d("FILE SAVE","###########");
 
         try {
             out = new ObjectOutputStream(new FileOutputStream(directory

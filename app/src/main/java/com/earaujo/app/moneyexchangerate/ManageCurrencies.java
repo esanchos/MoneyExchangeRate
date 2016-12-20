@@ -18,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -28,10 +29,10 @@ public class ManageCurrencies extends AppCompatActivity {
     private static final String TAG = "ManageCurrencies";
 
     private List<CountryItem> countryList;
+    private List<CountryItem> countryListToShow;
     private List<CountryItem> exclusionCountryList;
 
     private ManageAdapter listAdapter;
-    private ListView listView;
 
     private Context context;
 
@@ -46,6 +47,7 @@ public class ManageCurrencies extends AppCompatActivity {
 
         exclusionCountryList = new ArrayList<CountryItem>();
         countryList = new ArrayList<CountryItem>();
+        countryListToShow = new ArrayList<CountryItem>();
 
         Intent myIntent  = getIntent();
         CountriesIntent coutriesIntent =(CountriesIntent) myIntent.getExtras().getSerializable("CoutriesList");
@@ -58,20 +60,26 @@ public class ManageCurrencies extends AppCompatActivity {
             }
         }
 
-        countryList = sortList();
+        countryListToShow = sortList(countryList);
 
-        fillList(countryList);
+        fillList(countryListToShow);
     }
 
     private void filter(String query) {
-        List<CountryItem> countryFiltered = filterList(query.toLowerCase());
-        fillList(countryFiltered);
+        exclusionCountryList = FileOperations.readExcludedList(context);
+
+        if (query.isEmpty()) {
+            countryListToShow = sortList(countryList);
+        }
+
+        List<CountryItem> countryFiltered = filterList(countryListToShow, query.toLowerCase());
+        updateListView(countryFiltered);
     }
 
-    private List<CountryItem> filterList(String query) {
+    private List<CountryItem> filterList(List<CountryItem> listToFilter, String query) {
         List<CountryItem>tempList = new ArrayList<>();
 
-        for (CountryItem ci : countryList) {
+        for (CountryItem ci : listToFilter) {
             if ((ci.getCurrencyCode().toLowerCase().contains(query)) ||
                     (ci.getCountryName().toLowerCase().contains(query))){
                 tempList.add(ci);
@@ -81,28 +89,34 @@ public class ManageCurrencies extends AppCompatActivity {
         return tempList;
     }
 
-    private List<CountryItem> sortList() {
+    private List<CountryItem> sortList(List<CountryItem> listToSort) {
+        List<CountryItem>resultList = new ArrayList<>();
         List<CountryItem>tempList = new ArrayList<>();
+        List<CountryItem>tempList2 = new ArrayList<>();
 
-        for (CountryItem ci : countryList) {
+        for (CountryItem ci : listToSort) {
             if (!checkExcluded(ci)){
+                resultList.add(ci);
+            }
+            else {
                 tempList.add(ci);
             }
         }
 
-        for (CountryItem excl : exclusionCountryList) {
+        for (CountryItem excl : tempList) {
             if (checkPriority(excl)) {
-                tempList.add(excl);
+                resultList.add(excl);
+            }
+            else {
+                tempList2.add(excl);
             }
         }
 
-        for (CountryItem excl : exclusionCountryList) {
-            if (!checkPriority(excl)) {
-                tempList.add(excl);
-            }
+        for (CountryItem excl : tempList2) {
+            resultList.add(excl);
         }
 
-        return tempList;
+        return resultList;
     }
 
     private boolean checkExcluded(CountryItem ci) {
@@ -127,49 +141,33 @@ public class ManageCurrencies extends AppCompatActivity {
         return false;
     }
 
-    private void fillList(List<CountryItem> countryToShow) {
+    private void fillList(final List<CountryItem> countryToShow) {
+        ListView listView;
+
         listView = (ListView) findViewById(R.id.listView);
 
         listAdapter = new ManageAdapter(this, countryToShow,exclusionCountryList);
-        if (listView==null) {
-            Log.d(TAG, "LisView nulo. :(");
-            return;
-        }
         listView.setAdapter(listAdapter);
 
-        for (CountryItem ci : countryToShow) {
-            ci.loadImage(listAdapter);
-        }
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                for (CountryItem ci : countryToShow) {
+                    ci.loadImage();
+                }
+            }
+        };
+        thread.start();
     }
 
-    public void onAddAllClick(View view) {
-        exclusionCountryList.clear();
-        FileOperations.writeExcludedList(context, exclusionCountryList);
-        listAdapter.notifyDataSetChanged();
-    }
-
-    public void onRemoveAllClick(View view) {
-        exclusionCountryList.clear();
-        exclusionCountryList.addAll(countryList);
-        FileOperations.writeExcludedList(context, exclusionCountryList);
-        listAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        for (CountryItem ci : countryList) {
-            ci.taskCancel();
-        }
+    private void updateListView(List<CountryItem> countryToShow) {
+        listAdapter.updateItem(countryToShow,exclusionCountryList);
     }
 
     public void setupToolbar(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.manage_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setTitle("Search Currency");
-        /*getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);*/
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -192,14 +190,14 @@ public class ManageCurrencies extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Log.d("NUNES",query);
+                Log.d("NUNES","Query Submit: " + query);
                 searchView.setIconified(true);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Log.d("NUNES",newText);
+                Log.d("NUNES","Query: " + newText);
                 filter(newText);
                 return false;
             }
@@ -213,7 +211,6 @@ public class ManageCurrencies extends AppCompatActivity {
         if (view != null) {
             if (view instanceof TextView) {
                 ((TextView) view).setTextColor(Color.WHITE);
-                return;
             } else if (view instanceof ViewGroup) {
                 ViewGroup viewGroup = (ViewGroup) view;
                 for (int i = 0; i < viewGroup.getChildCount(); i++) {

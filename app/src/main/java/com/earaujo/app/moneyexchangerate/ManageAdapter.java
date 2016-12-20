@@ -54,6 +54,12 @@ public class ManageAdapter extends BaseAdapter {
         return items.get(id);
     }
 
+    public void updateItem(List items, List excludeds) {
+        this.items = items;
+        this.exclusionCountryList = excludeds;
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
@@ -92,7 +98,7 @@ public class ManageAdapter extends BaseAdapter {
             }
         });
 
-        if (exclusionCountryList.contains(ci)) {
+        if (containItem(exclusionCountryList, ci)) {
             holder.btn.setChecked(false);//.setImageResource(R.drawable.cb_unchecked);
         }
         else {
@@ -124,6 +130,15 @@ public class ManageAdapter extends BaseAdapter {
         tempList.add(itemToAdd);
 
         return tempList;
+    }
+
+    private boolean containItem(List<CountryItem> theList, CountryItem itemToCheck) {
+        for (CountryItem ci: theList) {
+            if (ci.getCurrencyCode().equals(itemToCheck.getCurrencyCode())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static class ViewHolder {

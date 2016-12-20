@@ -214,7 +214,7 @@ public class DownloadData {
                 new JsonObjectRequest(
                         Request.Method.GET,
                         URL_COUNTRIES,
-                        null,
+                        (String)null,
                         new Response.Listener<JSONObject>() {
 
                             @Override
@@ -352,13 +352,13 @@ public class DownloadData {
     }
 
     public static void getCurrencies(final Listener l, final Context c) {
-        Log.d("NUNES",initialRates);
+        //Log.d("NUNES",initialRates);
 
         JsonObjectRequest requisicao =
                 new JsonObjectRequest(
                         Request.Method.GET,
                         URL_CURRENCIES,
-                        null,
+                        (String)null,
                         new Response.Listener<JSONObject>() {
 
                             @Override
