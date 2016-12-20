@@ -32,6 +32,6 @@
         android:minWidth="250dp"
         android:textAlignment="textStart"
         android:gravity="start"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="16dp" />
 
 </RelativeLayout >
