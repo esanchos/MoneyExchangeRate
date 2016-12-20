@@ -72,7 +72,7 @@ public class SpinnerAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(ci.getCountryName());
+        holder.name.setText(ci.getCurrencyCode());
         if (ci.getImage() != null) {
             holder.image.setImageBitmap(ci.getImage());
         } else {

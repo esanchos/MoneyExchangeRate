@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -25,16 +22,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends Activity implements CurrencyData.Listener, SpinnerAdapter.Listener{
+import hotchemi.android.rate.AppRate;
+import hotchemi.android.rate.OnClickButtonListener;
+
+public class MainActivity extends Activity implements
+        CurrencyData.Listener, SpinnerAdapter.Listener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
     //UI Objects
-    private TextView tvFrom;
-    private TextView tvTo;
-
-    private EditText etBox1;
-    private EditText etBox2;
+    private TextView tvBox1;
+    private TextView tvBox2;
 
     private Spinner spnCountry1;
     private Spinner spnCountry2;
@@ -51,6 +49,8 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
     //Local control data
     private double rate;
 
+    private String inputNumber = "1";
+
     private SpinnerAdapter spinnerAdapter;
 
     private String positionSpin1;
@@ -62,7 +62,7 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9938026363796976~6776883041");
 
@@ -93,13 +93,27 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
 
         loadSpinners=true;
 
-        etBox1.setText("1");
-        etBox2.setText("3");
-
-        etBox1.addTextChangedListener(textWatcherb1());
-        etBox2.addTextChangedListener(textWatcherb2());
+        tvBox1.setText(inputNumber);
+        tvBox2.setText("3");
 
         getFirebaseToken();
+
+        AppRate.with(this)
+                .setInstallDays(10) // default 10, 0 means install day.
+                .setLaunchTimes(10) // default 10
+                .setRemindInterval(5) // default 1
+                .setShowLaterButton(true) // default true
+                .setDebug(false) // default false
+                .setOnClickButtonListener(new OnClickButtonListener() { // callback listener.
+                    @Override
+                    public void onClickButton(int which) {
+                        Log.d(MainActivity.class.getName(), Integer.toString(which));
+                    }
+                })
+                .monitor();
+
+        // Show a dialog if meets conditions
+        AppRate.showRateDialogIfMeetsConditions(this);
     }
 
     private void getFirebaseToken() {
@@ -123,17 +137,31 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
     }
 
     private void setObjectsReferences() {
-        tvFrom = (TextView) findViewById(R.id.tvFrom);
-        tvTo = (TextView) findViewById(R.id.tvTo);
-
-        etBox1 = (EditText) findViewById(R.id.etBox1);
-        etBox2 = (EditText) findViewById(R.id.etBox2);
+        tvBox1 = (TextView) findViewById(R.id.tvBox1);
+        tvBox2 = (TextView) findViewById(R.id.tvBox2);
 
         spnCountry1 = (Spinner) findViewById(R.id.spnCountry1);
         spnCountry2 = (Spinner) findViewById(R.id.spnCountry2);
 
-        timeStamp = (TextView) findViewById(R.id.timeStamp);
+        //timeStamp = (TextView) findViewById(R.id.timeStamp);
 
+        findViewById(R.id.tv0).setOnClickListener(this);
+        findViewById(R.id.tv1).setOnClickListener(this);
+        findViewById(R.id.tv2).setOnClickListener(this);
+        findViewById(R.id.tv3).setOnClickListener(this);
+        findViewById(R.id.tv4).setOnClickListener(this);
+        findViewById(R.id.tv5).setOnClickListener(this);
+        findViewById(R.id.tv6).setOnClickListener(this);
+        findViewById(R.id.tv7).setOnClickListener(this);
+        findViewById(R.id.tv8).setOnClickListener(this);
+        findViewById(R.id.tv9).setOnClickListener(this);
+
+        findViewById(R.id.tvClr).setOnClickListener(this);
+        findViewById(R.id.tvDel).setOnClickListener(this);
+        findViewById(R.id.tvDot).setOnClickListener(this);
+
+        findViewById(R.id.tvAdd).setOnClickListener(this);
+        findViewById(R.id.tvRate).setOnClickListener(this);
         //manageCurrencies = (Button) findViewById(R.id.manageCurrencies);
     }
 
@@ -151,28 +179,14 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
         if (spinnerAdapter==null)
             return;
 
-        timeStamp.setText(getDate(DownloadData.getTimeStamp()));
+        //timeStamp.setText(getDate(DownloadData.getTimeStamp()));
 
-        cd = spinnerAdapter.getCountryFromId(spnCountry1.getSelectedItemPosition());
-        tvFrom.setText("1 " + cd.getCountryName() + " equals");
-        cd = spinnerAdapter.getCountryFromId(spnCountry2.getSelectedItemPosition());
-        tvTo.setText(String.format( "%.2f", rate ).replace(",",".") + " " + cd.getCountryName());
+        //cd = spinnerAdapter.getCountryFromId(spnCountry1.getSelectedItemPosition());
+        //tvFrom.setText("1 " + cd.getCountryName() + " equals");
+        //cd = spinnerAdapter.getCountryFromId(spnCountry2.getSelectedItemPosition());
+        //tvTo.setText(String.format( "%.2f", rate ).replace(",",".") + " " + cd.getCountryName());
 
-        //etBox1.requestFocus();
-        if (etBox2.isFocused()) {
-            etBox1.requestFocus();
-            etBox1.setText(etBox1.getText());
-            etBox2.requestFocus();
-            etBox2.setSelection(etBox2.getText().length());
-            //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            //imm.showSoftInput(etBox2, InputMethodManager.SHOW_IMPLICIT);
-        }
-        else {
-            etBox1.setText(etBox1.getText());
-            etBox1.setSelection(etBox1.getText().length());
-            //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            //imm.showSoftInput(etBox1, InputMethodManager.SHOW_IMPLICIT);
-        }
+        tvBox2.setText(String.format( "%.2f", rate ).replace(",","."));
     }
 
     private void fillSpinners(List<CountryItem> countryItems) {
@@ -225,64 +239,8 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
         });
     }
 
-    private TextWatcher textWatcherb1() {
-        return new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (etBox1.isFocused()) {
-
-                    if (s.length() == 0) {
-                        etBox2.setText("");
-                    } else {
-                        double value = Double.parseDouble(String.valueOf(s).replace(",","."));
-                        String convertedValue = String.format( "%.2f", value * rate ).replace(",",".");//Double.toString(value * rate);
-                        etBox2.setText(convertedValue);
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        };
-    }
-
-    private TextWatcher textWatcherb2() {
-        return new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (etBox2.isFocused()) {
-                    if (s.length() == 0) {
-                        etBox1.setText("");
-                    } else {
-                        double value = Double.parseDouble(String.valueOf(s).replace(",","."));
-                        String convertedValue = String.format( "%.2f", value / rate ).replace(",",".");//Double.toString(value / rate);
-                        etBox1.setText(convertedValue);
-                    }
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        };
-    }
-
     public void onGetCurrencyCompleted() {
+        rate = currencyData.getRate();
         updateUI();
     }
 
@@ -367,7 +325,7 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
         spnCountry2.setSelection(spn2pos);
     }
 
-    public void onManageCurrenciesClick(View view) {
+    public void onManageCurrenciesClick() {
 
         if (!loadSpinners)
             return;
@@ -413,5 +371,118 @@ public class MainActivity extends Activity implements CurrencyData.Listener, Spi
 
     public void deleteFlags(View view) {
         FileOperations.deleteFlags(this);
+    }
+
+    /* KEYBOARD HANDLER */
+
+    private double getDoubleFromInput() {
+        String number = inputNumber;
+
+        if (number.indexOf(".")==inputNumber.length()-1) {
+            number+="0";
+        }
+        return Double.valueOf(number);
+    }
+
+    private void updateValues() {
+        tvBox1.setText(inputNumber);
+
+        double doubleInput = getDoubleFromInput();
+
+        if (doubleInput==0) {
+            tvBox2.setText("0");
+        }
+        else {
+            //tvBox2.setText(Double.toString(doubleInput*rate));
+            String convertedValue = String.format( "%.2f", doubleInput * rate ).replace(",",".");//Double.toString(value * rate);
+            tvBox2.setText(convertedValue);
+        }
+    }
+
+    private void addInputValue(int value) {
+        if (inputNumber.equals("0")) {
+            inputNumber = Integer.toString(value);
+        }
+        else {
+            inputNumber += Integer.toString(value);
+        }
+
+        updateValues();
+    }
+
+    private void clearInput() {
+        inputNumber = "0";
+
+        updateValues();
+    }
+
+    private void delInput() {
+
+        if (inputNumber.length()>0) {
+            inputNumber = inputNumber.substring(0, inputNumber.length() - 1);
+        }
+        if (inputNumber.length()==0) {
+            inputNumber="0";
+        }
+        updateValues();
+    }
+
+    private void addInputDot() {
+        if (!inputNumber.contains(".")) {
+            inputNumber += ".";
+            updateValues();
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.tv0:
+                addInputValue(0);
+                break;
+            case R.id.tv1:
+                addInputValue(1);
+                break;
+            case R.id.tv2:
+                addInputValue(2);
+                break;
+            case R.id.tv3:
+                addInputValue(3);
+                break;
+            case R.id.tv4:
+                addInputValue(4);
+                break;
+            case R.id.tv5:
+                addInputValue(5);
+                break;
+            case R.id.tv6:
+                addInputValue(6);
+                break;
+            case R.id.tv7:
+                addInputValue(7);
+                break;
+            case R.id.tv8:
+                addInputValue(8);
+                break;
+            case R.id.tv9:
+                addInputValue(9);
+                break;
+            case R.id.tvClr:
+                clearInput();
+                break;
+            case R.id.tvDel:
+                delInput();
+                break;
+            case R.id.tvDot:
+                addInputDot();
+                break;
+
+            case R.id.tvAdd:
+                onManageCurrenciesClick();
+                break;
+            case R.id.tvRate:
+                AppRate.with(this).showRateDialog(this);
+                break;
+        }
     }
 }

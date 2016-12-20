@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:padding="0dp"
-    android:paddingBottom="1dp">
+    android:layout_height="48dp"
+    android:padding="4dp">
 
     <ImageView
         android:id="@+id/imgLanguage"
@@ -15,20 +14,21 @@
         android:paddingBottom="1dp"
         android:paddingLeft="0dp"
         android:paddingTop="0dp"
-        android:paddingRight="0dp" />
+        android:paddingRight="0dp"
+        android:layout_marginLeft="12dp"/>
 
     <TextView
         android:id="@+id/tvLanguage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="20sp"
         android:text="TheText"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/imgLanguage"
-        android:layout_toEndOf="@+id/imgLanguage"
+        android:layout_toRightOf="@id/imgLanguage"
+        android:layout_toEndOf="@id/imgLanguage"
         android:minWidth="250dp"
         android:textAlignment="textStart"
-        android:paddingLeft="5dp" />
+        android:paddingLeft="8dp" />
 
     <ImageView
         android:id="@+id/button"
