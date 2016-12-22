@@ -95,13 +95,14 @@
                 android:paddingTop="10dp"
                 android:textSize="@dimen/keyboard_text_size" />
 
-        <TextView
-            android:text=""
+        <ImageView
+            android:src="@drawable/ic_share_black_24dp"
+            android:alpha=".54"
             android:layout_weight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:id="@+id/tvAdd2"
+            android:id="@+id/tvShare"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:textSize="@dimen/keyboard_text_size" />

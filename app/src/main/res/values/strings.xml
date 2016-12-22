@@ -3,6 +3,14 @@
     <string name="banner_ad_unit_id">ca-app-pub-9938026363796976/9730349446</string>
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
 
+    <string name="invitation_title">Share with friends!</string>
+    <string name="invitation_message">Check out the best app for converting currencies!</string>
+    <string name="invitation_deep_link">https://c28cm.app.goo.gl/naxz</string>
+    <string name="invitation_custom_image">https://lh3.googleusercontent.com/Gq9rARiSr0_gHblqexLpb4kd7MPE2iBcFRYT0VUDq8Cu_LlTbr7Bhzm0Z2h0boYn9g=w300-rw</string>
+    <string name="invitation_cta">INSTALL NOW</string>
+    <!--<string name="invitation_email"></string>-->
+    <string name="invitation_subject">Check out the best app for converting currencies!</string>
+
     <string name="keypad0">0</string>
     <string name="keypad1">1</string>
     <string name="keypad2">2</string>

@@ -3,6 +3,7 @@ package com.earaujo.app.moneyexchangerate;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.text.DateFormat;
@@ -29,6 +31,9 @@ public class MainActivity extends Activity implements
         CurrencyData.Listener, View.OnClickListener {
 
     private static final String TAG = "MainActivity";
+
+    private static final int REQUEST_INVITE = 8001;
+    private static final int MANAGE_CURRENCIES = 8002;
 
     //UI Objects
     private TextView tvBox1;
@@ -114,6 +119,8 @@ public class MainActivity extends Activity implements
 
         // Show a dialog if meets conditions
         AppRate.showRateDialogIfMeetsConditions(this);
+
+        deleteFlags();
     }
 
     private void getFirebaseToken() {
@@ -161,6 +168,7 @@ public class MainActivity extends Activity implements
         findViewById(R.id.tvDot).setOnClickListener(this);
 
         findViewById(R.id.tvAdd).setOnClickListener(this);
+        findViewById(R.id.tvShare).setOnClickListener(this);
         findViewById(R.id.tvRate).setOnClickListener(this);
         //manageCurrencies = (Button) findViewById(R.id.manageCurrencies);
     }
@@ -168,9 +176,24 @@ public class MainActivity extends Activity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
-        currencyData.readExcludedList();
-        loadSpinners = true;
+        if (requestCode == REQUEST_INVITE) {
+            if (resultCode == RESULT_OK) {
+                // Get the invitation IDs of all sent messages
+                String[] ids = AppInviteInvitation.getInvitationIds(resultCode, data);
+                for (String id : ids) {
+                    Log.d(TAG, "onActivityResult: sent invitation " + id);
+                }
+            } else {
+                // Sending failed or it was canceled, show failure message to the user
+                // ...
+            }
+        }
+        else if (requestCode == MANAGE_CURRENCIES){
+            currencyData.readExcludedList();
+            loadSpinners = true;
+        }
     }
 
     private void fillSpinners(List<CountryItem> countryItems) {
@@ -263,10 +286,7 @@ public class MainActivity extends Activity implements
             return;
         loadSpinners=false;
 
-        Intent manageCurrenciesIntent = new Intent(this,
-                ManageCurrencies.class);
-
-        final int result = 1;
+        Intent manageCurrenciesIntent = new Intent(this, ManageCurrencies.class);
 
         CountriesIntent ci = new CountriesIntent();
 
@@ -282,7 +302,7 @@ public class MainActivity extends Activity implements
         }
 
         manageCurrenciesIntent.putExtra("CoutriesList", ci);
-        startActivityForResult(manageCurrenciesIntent, result);
+        startActivityForResult(manageCurrenciesIntent, MANAGE_CURRENCIES);
     }
 
     @Override
@@ -292,8 +312,19 @@ public class MainActivity extends Activity implements
         currencyData.getCurrencies();
     }
 
-    public void deleteFlags(View view) {
+    public void deleteFlags() {
         FileOperations.deleteFlags(this);
+    }
+
+    private void onInviteClicked() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(getString(R.string.invitation_title))
+                .setMessage(getString(R.string.invitation_message))
+                .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
+                .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
+                .setCallToActionText(getString(R.string.invitation_cta))
+//                .setEmailSubject(getString(R.string.invitation_subject))
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
     }
 
     /* KEYBOARD HANDLER */
@@ -402,6 +433,9 @@ public class MainActivity extends Activity implements
 
             case R.id.tvAdd:
                 onManageCurrenciesClick();
+                break;
+            case R.id.tvShare:
+                onInviteClicked();
                 break;
             case R.id.tvRate:
                 AppRate.with(this).showRateDialog(this);

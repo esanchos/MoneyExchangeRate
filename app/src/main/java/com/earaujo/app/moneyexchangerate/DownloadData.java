@@ -1,7 +1,6 @@
 package com.earaujo.app.moneyexchangerate;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -24,6 +23,7 @@ public class DownloadData {
 
     private static final String URL_COUNTRIES = "http://apilayer.net/api/list?access_key=1e98533581cd6827c561b1d6d7883b93&prettyprint=1";
     //private static final String URL_CURRENCIES = "http://apilayer.net/api/live?access_key=1e98533581cd6827c561b1d6d7883b93&format=1";
+    private static final String URL_CURRENCIES2 = "http://apilayer.net/api/live?access_key=a219a950aad38e996de3e351a95842d6&format=1";  //eduardofshero
     private static final String URL_CURRENCIES = "http://eduardoaraujo.dynu.com/app/currency/currency.php";
 
     private static long timeStamp=0;
@@ -358,6 +358,57 @@ public class DownloadData {
                 new JsonObjectRequest(
                         Request.Method.GET,
                         URL_CURRENCIES,
+                        (String)null,
+                        new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                if(response.has("timestamp")) {
+                                    FileOperations.writeCurrencyJson(c,response.toString());
+                                    try {
+                                        timeStamp = response.getLong("timestamp");
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if(response.has("quotes")) {
+                                    try {
+                                        JSONObject quotes = (JSONObject) response.get("quotes");
+
+                                        l.onGetCurrencyCompleted(saveRates(quotes));
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else {
+                                    //tvCotacao.setText("Não foi possível obter a cotação!");
+                                    //Log.d("NUNES","Erro 1");
+                                    getCurrencies2(l,c);
+                                }
+                            }
+                        },
+                        new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                //tvCotacao.setText("Não foi possível obter a cotação!");
+                                //Log.d("NUNES","Erro 2");
+                                getCurrencies2(l,c);
+                            }
+                        }
+
+                );
+
+        RequestQueue fila = Volley.newRequestQueue(c);
+        fila.add(requisicao);
+    }
+
+    public static void getCurrencies2(final Listener l, final Context c) {
+        //Log.d("NUNES","getCurrencies2");
+
+        JsonObjectRequest requisicao =
+                new JsonObjectRequest(
+                        Request.Method.GET,
+                        URL_CURRENCIES2,
                         (String)null,
                         new Response.Listener<JSONObject>() {
 
