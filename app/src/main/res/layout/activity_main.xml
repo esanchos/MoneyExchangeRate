@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp">
+    xmlns:autofit="http://schemas.android.com/tools">
 
     <TextView
         android:layout_width="fill_parent"
@@ -14,94 +14,76 @@
         android:textColor="@color/colorPrimaryDark"
         android:layout_margin="0dp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp" />
+        android:paddingBottom="5dp"
+        android:gravity="center"/>
 
     <LinearLayout
+        android:id="@+id/upCurrency"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp">
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"
+        android:padding="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Spinner
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:id="@+id/spnCountry1"
+            android:layout_weight="1" />
+
+
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="1"
+            android:maxLines="1"
+            autofit:minTextSize="16sp"
+            android:textSize="24sp"
+            android:gravity="right"
+            android:layout_marginRight="16dp"
             android:ems="10"
             android:id="@+id/tvBox1"
             android:layout_weight="2" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:id="@+id/spnCountry1"
-            android:layout_centerVertical="true"
-            android:layout_weight="1" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/downCurrency"
+        android:visibility="visible"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/upCurrency"
+        android:layout_toRightOf="@+id/adView"
+        android:layout_toEndOf="@+id/adView"
+        android:gravity="center_vertical"
+        android:padding="5dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <Spinner
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:id="@+id/spnCountry2"
+            android:layout_weight="1" />
+
+        <me.grantland.widget.AutofitTextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="1"
+            android:maxLines="1"
+            autofit:minTextSize="16sp"
+            android:textSize="24sp"
+            android:gravity="right"
+            android:layout_marginRight="16dp"
             android:ems="10"
             android:id="@+id/tvBox2"
             android:layout_weight="2" />
 
-        <Spinner
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:id="@+id/spnCountry2"
-            android:layout_centerVertical="true"
-            android:layout_weight="1" />
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+ currencies"
-            android:id="@+id/manageCurrencies"
-            android:onClick="onManageCurrenciesClick" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="last update"
-            android:id="@+id/textView"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/timeStamp"
-            android:layout_below="@+id/textView"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
-
-    </RelativeLayout>
 
     <include layout="@layout/keyboard"
         android:visibility="visible"/>
 
-    <com.google.android.gms.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
-
-</LinearLayout>
+</RelativeLayout>

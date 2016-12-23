@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentLeft="true"
-    android:layout_alignParentStart="true"
-    android:layout_gravity="bottom">
+    android:id="@+id/bannersizes_rl_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:stretchColumns="*"
+        android:layout_above="@+id/adView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom">
 
         <TableRow
             android:layout_width="match_parent"
@@ -22,8 +29,8 @@
                 android:id="@+id/tv7"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
-
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground" />
             <TextView
                 android:text="@string/keypad8"
                 android:layout_weight="1"
@@ -33,8 +40,8 @@
                 android:id="@+id/tv8"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
-
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
             <TextView
                 android:text="@string/keypad9"
                 android:layout_weight="1"
@@ -44,8 +51,8 @@
                 android:id="@+id/tv9"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
-
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
             <TextView
                 android:text="@string/keypadAdd"
                 android:layout_weight="1"
@@ -55,24 +62,25 @@
                 android:id="@+id/tvAdd"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <TextView
-            android:text="@string/keypad4"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tv4"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="@dimen/keyboard_text_size" />
-
+            <TextView
+                android:text="@string/keypad4"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tv4"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
             <TextView
                 android:text="@string/keypad5"
                 android:layout_weight="1"
@@ -82,98 +90,100 @@
                 android:id="@+id/tv5"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
-
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
             <TextView
-            android:text="@string/keypad6"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tv6"
+                android:text="@string/keypad6"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tv6"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
-
-        <ImageView
-            android:src="@drawable/ic_share_black_24dp"
-            android:alpha=".54"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tvShare"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="@dimen/keyboard_text_size" />
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
+            <ImageView
+                android:src="@drawable/ic_share_black_24dp"
+                android:alpha=".54"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tvShare"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <TextView
-            android:text="@string/keypad1"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tv1"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="@dimen/keyboard_text_size" />
-
-        <TextView
-            android:text="@string/keypad2"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tv2"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="@dimen/keyboard_text_size" />
-
-        <TextView
-            android:text="@string/keypad3"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tv3"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="@dimen/keyboard_text_size" />
-
-        <ImageView
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tvRate"
-            android:alpha=".54"
-            android:src="@drawable/ic_star_black_24dp"
-            android:layout_gravity="center_vertical"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="@dimen/keyboard_text_size" />
+            <TextView
+                android:text="@string/keypad1"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tv1"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
+            <TextView
+                android:text="@string/keypad2"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tv2"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
+            <TextView
+                android:text="@string/keypad3"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tv3"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
+            <ImageView
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tvRate"
+                android:alpha=".54"
+                android:src="@drawable/ic_star_black_24dp"
+                android:layout_gravity="center_vertical"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
         </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
 
-        <TextView
-            android:text="@string/keypadDot"
-            android:layout_weight="1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:id="@+id/tvDot"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:textSize="@dimen/keyboard_text_size" />
-
+            <TextView
+                android:text="@string/keypadDot"
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:id="@+id/tvDot"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
             <TextView
                 android:text="@string/keypad0"
                 android:layout_weight="1"
@@ -183,8 +193,8 @@
                 android:id="@+id/tv0"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
-
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
             <ImageView
                 android:text="@string/keypadDel"
                 android:layout_weight="1"
@@ -198,8 +208,8 @@
                 android:src="@drawable/ic_backspace_black_24dp"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
-
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
             <TextView
                 android:text="@string/keypadClr"
                 android:layout_weight="1"
@@ -209,21 +219,24 @@
                 android:id="@+id/tvClr"
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
-                android:textSize="@dimen/keyboard_text_size" />
+                android:textSize="@dimen/keyboard_text_size"
+                android:background="?android:attr/selectableItemBackground"/>
 
         </TableRow>
 
-        <com.google.android.gms.ads.AdView
-            android:layout_marginTop="10dp"
-            android:id="@+id/adView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-        </com.google.android.gms.ads.AdView>
-
     </TableLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:layout_marginTop="10dp"
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        ads:adSize="SMART_BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+    </com.google.android.gms.ads.AdView>
+
+</RelativeLayout>

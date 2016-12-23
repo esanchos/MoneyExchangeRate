@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -63,17 +64,20 @@ public class MainActivity extends Activity implements
 
     private Context context;
 
+    private AdView mAdView;
+    private FrameLayout mAdFrameLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
 
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9938026363796976~6776883041");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        //AdRequest adRequest = new AdRequest.Builder().addTestDevice("8FA911DB41DE8629DF3B72C3716E6087").build();
-        AdRequest adRequest = new AdRequest.Builder().build();
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("8FA911DB41DE8629DF3B72C3716E6087").build();
+        //AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         context = this;
