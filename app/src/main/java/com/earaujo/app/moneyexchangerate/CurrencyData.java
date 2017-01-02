@@ -35,7 +35,7 @@ public class CurrencyData implements DownloadData.Listener{
     }
 
     public void readExcludedList() {
-        excludedCountryList = new ArrayList<CountryItem>();
+        excludedCountryList = new ArrayList<>();
 
         List<CountryItem> tempExcludeList;
 

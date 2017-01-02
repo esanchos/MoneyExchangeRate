@@ -71,11 +71,13 @@ public class SpinnerAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.name.setText(fromHtml("<b><font color=black>" + ci.getCurrencyCode() + "</font></b> " + ci.getCountryName()));
-        if (ci.getImage() != null) {
-            holder.image.setImageBitmap(ci.getImage());
-        } else {
-            holder.image.setImageResource(R.drawable.no_flag);
+        if (holder!=null) {
+            holder.name.setText(fromHtml("<b><font color=black>" + ci.getCurrencyCode() + "</font></b> " + ci.getCountryName()));
+            if (ci.getImage() != null) {
+                holder.image.setImageBitmap(ci.getImage());
+            } else {
+                holder.image.setImageResource(R.drawable.no_flag);
+            }
         }
 
         return convertView;

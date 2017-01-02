@@ -11,6 +11,8 @@
     <!--<string name="invitation_email"></string>-->
     <string name="invitation_subject">Check out the best app for converting currencies!</string>
 
+    <string name="dialog_choose_country">Add more currencies</string>
+
     <string name="keypad0">0</string>
     <string name="keypad1">1</string>
     <string name="keypad2">2</string>

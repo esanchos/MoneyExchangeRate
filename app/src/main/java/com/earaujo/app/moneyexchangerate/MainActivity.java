@@ -1,6 +1,7 @@
 package com.earaujo.app.moneyexchangerate;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,9 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.FrameLayout;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
@@ -19,17 +18,18 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.appinvite.AppInviteInvitation;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import hotchemi.android.rate.AppRate;
 import hotchemi.android.rate.OnClickButtonListener;
 
+import static android.text.Html.fromHtml;
+
 public class MainActivity extends Activity implements
-        CurrencyData.Listener, View.OnClickListener {
+        CurrencyData.Listener, View.OnClickListener,
+        MainCountryDialog.CountryDialogListener,
+        DialogCountryAdapter.CountryItemListener {
 
     private static final String TAG = "MainActivity";
 
@@ -40,32 +40,27 @@ public class MainActivity extends Activity implements
     private TextView tvBox1;
     private TextView tvBox2;
 
-    private Spinner spnCountry1;
-    private Spinner spnCountry2;
-
-    private TextView timeStamp;
+    private ImageView imgCountry1;
+    private TextView tvCountry1;
+    private ImageView imgCountry2;
+    private TextView tvCountry2;
 
     private boolean loadSpinners;
-
-    //private Button manageCurrencies;
 
     //Main class to the currency data
     private CurrencyData currencyData;
 
-    //Local control data
     private double rate;
 
     private String inputNumber = "1";
 
-    private SpinnerAdapter spinnerAdapter;
-
     private String positionSpin1;
     private String positionSpin2;
 
-    private Context context;
+    List<CountryItem> selectedCountries;
+    MainCountryDialog newFragment;
 
-    private AdView mAdView;
-    private FrameLayout mAdFrameLayout;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +71,13 @@ public class MainActivity extends Activity implements
         MobileAds.initialize(getApplicationContext(), "ca-app-pub-9938026363796976~6776883041");
 
         AdView mAdView = (AdView) findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("8FA911DB41DE8629DF3B72C3716E6087").build();
-        //AdRequest adRequest = new AdRequest.Builder().build();
+        //AdRequest adRequest = new AdRequest.Builder().addTestDevice("8FA911DB41DE8629DF3B72C3716E6087").build();
+        AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         context = this;
+
+        selectedCountries = new ArrayList<>();
 
         rate=1;
 
@@ -94,7 +91,7 @@ public class MainActivity extends Activity implements
             positionSpin2 = tempPosition.substring(3,6);
         }
 
-        setObjectsReferences();
+        setupComponents();
 
         currencyData = new CurrencyData(this);
         currencyData.setFromCountry(positionSpin1);
@@ -130,29 +127,18 @@ public class MainActivity extends Activity implements
     private void getFirebaseToken() {
         String token = FirebaseInstanceId.getInstance().getToken();
 
-        // Log and toast
         String msg = getString(R.string.msg_token_fmt, token);
-        Log.d(TAG, msg);
+        //Log.d(TAG, msg);
     }
 
-    private String getDate(long timeStamp){
-
-        try{
-            DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-            Date netDate = (new Date(timeStamp));
-            return sdf.format(netDate);
-        }
-        catch(Exception ex){
-            return "xx";
-        }
-    }
-
-    private void setObjectsReferences() {
+    private void setupComponents() {
         tvBox1 = (TextView) findViewById(R.id.tvBox1);
         tvBox2 = (TextView) findViewById(R.id.tvBox2);
 
-        spnCountry1 = (Spinner) findViewById(R.id.spnCountry1);
-        spnCountry2 = (Spinner) findViewById(R.id.spnCountry2);
+        imgCountry1 = (ImageView) findViewById(R.id.imgCountry1);
+        tvCountry1 = (TextView) findViewById(R.id.tvCountry1);
+        imgCountry2 = (ImageView) findViewById(R.id.imgCountry2);
+        tvCountry2 = (TextView) findViewById(R.id.tvCountry2);
 
         //timeStamp = (TextView) findViewById(R.id.timeStamp);
 
@@ -174,13 +160,15 @@ public class MainActivity extends Activity implements
         findViewById(R.id.tvAdd).setOnClickListener(this);
         findViewById(R.id.tvShare).setOnClickListener(this);
         findViewById(R.id.tvRate).setOnClickListener(this);
-        //manageCurrencies = (Button) findViewById(R.id.manageCurrencies);
+
+        findViewById(R.id.upCurrency).setOnClickListener(this);
+        findViewById(R.id.downCurrency).setOnClickListener(this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
+        //Log.d(TAG, "onActivityResult: requestCode=" + requestCode + ", resultCode=" + resultCode);
 
         if (requestCode == REQUEST_INVITE) {
             if (resultCode == RESULT_OK) {
@@ -200,51 +188,28 @@ public class MainActivity extends Activity implements
         }
     }
 
-    private void fillSpinners(List<CountryItem> countryItems) {
-
-        spinnerAdapter = new SpinnerAdapter(this, countryItems);
-        //sta.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spnCountry1.setAdapter(spinnerAdapter);
-
-        for (CountryItem ci : countryItems) {
-            ci.loadImage();
+    private void updateCurrencyUI() {
+        int countryPosition1=0;
+        int countryPosition2=0;
+        int i=0;
+        for(CountryItem cd: selectedCountries) {
+            if (cd.getCurrencyCode().equals(positionSpin1)) {
+                countryPosition1=i;
+            }
+            if (cd.getCurrencyCode().equals(positionSpin2)) {
+                countryPosition2=i;
+            }
+            i++;
         }
+        updateCurrencyUI(selectedCountries.get(countryPosition1), selectedCountries.get(countryPosition2));
+    }
 
-        spnCountry1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                CountryItem cd = spinnerAdapter.getCountryFromId(i);
-                currencyData.setFromCountry(cd.getCurrencyCode());
-                rate = currencyData.getRate();
-                positionSpin1 = cd.getCurrencyCode();
-                FileOperations.writeSpinPosition(context,positionSpin1,positionSpin2);
-                updateValues();
-            }
+    private void updateCurrencyUI(CountryItem countryItem1, CountryItem countryItem2) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        spnCountry2.setAdapter(spinnerAdapter);
-        spnCountry2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                CountryItem cd = spinnerAdapter.getCountryFromId(i);
-                currencyData.setToCountry(cd.getCurrencyCode());
-                rate = currencyData.getRate();
-                positionSpin2 = cd.getCurrencyCode();
-                FileOperations.writeSpinPosition(context,positionSpin1,positionSpin2);
-                updateValues();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        imgCountry1.setImageBitmap(countryItem1.getImage());
+        tvCountry1.setText(fromHtml("<b><font color=black>" + countryItem1.getCurrencyCode() + "</font></b> "));// +  countryItem1.getCountryName()));
+        imgCountry2.setImageBitmap(countryItem2.getImage());
+        tvCountry2.setText(fromHtml("<b><font color=black>" + countryItem2.getCurrencyCode() + "</font></b> "));// +  countryItem2.getCountryName()));
     }
 
     public void onGetCurrencyCompleted() {
@@ -254,34 +219,45 @@ public class MainActivity extends Activity implements
 
     public void onGetCountriesNames() {
 
-        int spn1pos=0;
-        int spn2pos=0;
+        int countryPosition1=-1;
+        int countryPosition2=-1;
 
-        List<CountryItem> listCountries = new ArrayList<>();
+        selectedCountries.clear();
 
-        listCountries.addAll(currencyData.getCountryDataList());
+        selectedCountries.addAll(currencyData.getCountryDataList());
 
         // REMOVE THE ITEM TO THE SPINNERS
         for(CountryItem ci: currencyData.getExcludedCountryList()) {
-            listCountries.remove(ci);
+            selectedCountries.remove(ci);
         }
 
         //CHECK DEFAULT SPINNER POSITION
         int i=0;
-        for(CountryItem cd: listCountries) {
+        for(CountryItem cd: selectedCountries) {
             if (cd.getCurrencyCode().equals(positionSpin1)) {
-                spn1pos=i;
+                countryPosition1=i;
             }
             if (cd.getCurrencyCode().equals(positionSpin2)) {
-                spn2pos=i;
+                countryPosition2=i;
             }
             i++;
+            cd.loadImage();
         }
 
-        fillSpinners(listCountries);
+        if (countryPosition1==-1) {
+            countryPosition1=0;
+            positionSpin1=selectedCountries.get(0).getCurrencyCode();
+            currencyData.setFromCountry(positionSpin1);
+            rate = currencyData.getRate();
+        }
+        if (countryPosition2==-1) {
+            countryPosition2=0;
+            positionSpin2=selectedCountries.get(0).getCurrencyCode();
+            currencyData.setToCountry(positionSpin2);
+            rate = currencyData.getRate();
+        }
 
-        spnCountry1.setSelection(spn1pos);
-        spnCountry2.setSelection(spn2pos);
+        updateCurrencyUI(selectedCountries.get(countryPosition1), selectedCountries.get(countryPosition2));
     }
 
     public void onManageCurrenciesClick() {
@@ -305,7 +281,7 @@ public class MainActivity extends Activity implements
             ci.add(items.getCountryName(),items.getCurrencyCode(),items.getImgUrl(),excluded);  //fill intent
         }
 
-        manageCurrenciesIntent.putExtra("CoutriesList", ci);
+        manageCurrenciesIntent.putExtra("CountriesList", ci);
         startActivityForResult(manageCurrenciesIntent, MANAGE_CURRENCIES);
     }
 
@@ -314,6 +290,7 @@ public class MainActivity extends Activity implements
         super.onResume();
         onGetCountriesNames();
         currencyData.getCurrencies();
+        updateValues();
     }
 
     public void deleteFlags() {
@@ -326,9 +303,63 @@ public class MainActivity extends Activity implements
                 .setDeepLink(Uri.parse(getString(R.string.invitation_deep_link)))
                 .setCustomImage(Uri.parse(getString(R.string.invitation_custom_image)))
                 .setCallToActionText(getString(R.string.invitation_cta))
-//                .setEmailSubject(getString(R.string.invitation_subject))
                 .build();
         startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    /* SWAP */
+    private void onSwapCurrenciesClick() {
+        String spinTemp;
+
+        spinTemp = positionSpin1;
+        positionSpin1 = positionSpin2;
+        positionSpin2 = spinTemp;
+
+        currencyData.setFromCountry(positionSpin1);
+        currencyData.setToCountry(positionSpin2);
+        rate = currencyData.getRate();
+
+        updateCurrencyUI();
+        updateValues();
+    }
+
+    /* Choose Country Dialog Listener */
+
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+        onManageCurrenciesClick();
+    }
+
+    @Override
+    public void onCountryClick(int pos, int callbackValue) {
+
+        if (newFragment!=null) newFragment.dismiss();
+
+        switch (callbackValue) {
+            case 0:
+                positionSpin1 = selectedCountries.get(pos).getCurrencyCode();
+                break;
+            case 1:
+                positionSpin2 = selectedCountries.get(pos).getCurrencyCode();
+                break;
+        }
+        currencyData.setFromCountry(positionSpin1);
+        currencyData.setToCountry(positionSpin2);
+        rate = currencyData.getRate();
+
+        updateCurrencyUI();
+        FileOperations.writeSpinPosition(context,positionSpin1,positionSpin2);
+        updateValues();
+    }
+
+    private void showChooseCurrencyDialog(int position) {
+        CountriesIntent ci = new CountriesIntent();
+
+        for (CountryItem items : selectedCountries) {
+            ci.add(items.getCountryName(),items.getCurrencyCode(),items.getImgUrl(),false);
+        }
+        newFragment = MainCountryDialog.newInstance(ci, position);
+        newFragment.show(getFragmentManager(), "dialog");
     }
 
     /* KEYBOARD HANDLER */
@@ -395,6 +426,12 @@ public class MainActivity extends Activity implements
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.upCurrency:
+                showChooseCurrencyDialog(0);
+                break;
+            case R.id.downCurrency:
+                showChooseCurrencyDialog(1);
+                break;
             case R.id.tv0:
                 addInputValue(0);
                 break;
@@ -436,7 +473,7 @@ public class MainActivity extends Activity implements
                 break;
 
             case R.id.tvAdd:
-                onManageCurrenciesClick();
+                onSwapCurrenciesClick();
                 break;
             case R.id.tvShare:
                 onInviteClicked();

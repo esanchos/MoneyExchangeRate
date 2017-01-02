@@ -1,6 +1,5 @@
 package com.earaujo.app.moneyexchangerate;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,7 +17,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -45,14 +43,14 @@ public class ManageCurrencies extends AppCompatActivity {
 
         context = this;
 
-        exclusionCountryList = new ArrayList<CountryItem>();
-        countryList = new ArrayList<CountryItem>();
-        countryListToShow = new ArrayList<CountryItem>();
+        exclusionCountryList = new ArrayList<>();
+        countryList = new ArrayList<>();
+        countryListToShow = new ArrayList<>();
 
         Intent myIntent  = getIntent();
-        CountriesIntent coutriesIntent =(CountriesIntent) myIntent.getExtras().getSerializable("CoutriesList");
+        CountriesIntent countriesIntent =(CountriesIntent) myIntent.getExtras().getSerializable("CountriesList");
 
-        for (CountriesIntent.currencyItem ci : coutriesIntent.getItems()) {
+        for (CountriesIntent.currencyItem ci : countriesIntent.getItems()) {
             CountryItem item = new CountryItem(this, ci.getCountryName(), ci.getCurrencyCode(), ci.getFlag());
             countryList.add(item);
             if (ci.isExcluded()) {
