@@ -96,6 +96,7 @@ public class MainActivity extends Activity implements
         currencyData = new CurrencyData(this);
         currencyData.setFromCountry(positionSpin1);
         currencyData.setToCountry(positionSpin2);
+        rate = currencyData.getRate();
 
         loadSpinners=true;
 
